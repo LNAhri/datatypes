@@ -1,5 +1,8 @@
 # GORM Data Types
 
+Removed all imports to the drivers to reduce the needed imported librarys. Helpfull if you wann have a clean import line in your project.
+SQLite is only imported as test db driver.
+
 ## JSON
 
 sqlite, mysql, postgres supported

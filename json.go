@@ -11,7 +11,6 @@ import (
 	"strings"
 	"sync"
 
-	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"gorm.io/gorm/schema"
@@ -96,7 +95,7 @@ func (js JSON) GormValue(ctx context.Context, db *gorm.DB) clause.Expr {
 
 	switch db.Dialector.Name() {
 	case "mysql":
-		if v, ok := db.Dialector.(*mysql.Dialector); ok && !strings.Contains(v.ServerVersion, "MariaDB") {
+		if v, ok := db.Dialector.(*mySQLDialector); ok && !strings.Contains(v.ServerVersion, "MariaDB") {
 			return gorm.Expr("CAST(? AS JSON)", string(data))
 		}
 	}
@@ -366,7 +365,7 @@ func (jsonSet *JSONSetExpression) Build(builder clause.Builder) {
 		case "mysql":
 
 			var isMariaDB bool
-			if v, ok := stmt.Dialector.(*mysql.Dialector); ok {
+			if v, ok := stmt.Dialector.(*mySQLDialector); ok {
 				isMariaDB = strings.Contains(v.ServerVersion, "MariaDB")
 			}
 

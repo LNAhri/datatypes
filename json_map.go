@@ -9,11 +9,38 @@ import (
 	"fmt"
 	"strings"
 
-	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"gorm.io/gorm/schema"
 )
+
+// copy over the mysql Dialector to not import the whole mysql package
+type mySQLConfig struct {
+	DriverName                    string
+	ServerVersion                 string
+	DSN                           string
+	DSNConfig                     *mySQLConfig
+	Conn                          gorm.ConnPool
+	SkipInitializeWithVersion     bool
+	DefaultStringSize             uint
+	DefaultDatetimePrecision      *int
+	DisableWithReturning          bool
+	DisableDatetimePrecision      bool
+	DontSupportRenameIndex        bool
+	DontSupportRenameColumn       bool
+	DontSupportForShareClause     bool
+	DontSupportNullAsDefaultValue bool
+	DontSupportRenameColumnUnique bool
+	// As of MySQL 8.0.19, ALTER TABLE permits more general (and SQL standard) syntax
+	// for dropping and altering existing constraints of any type.
+	// see https://dev.mysql.com/doc/refman/8.0/en/alter-table.html
+	DontSupportDropConstraint bool
+}
+
+type mySQLDialector struct {
+	gorm.Dialector
+	*mySQLConfig
+}
 
 // JSONMap defined JSON data type, need to implements driver.Valuer, sql.Scanner interface
 type JSONMap map[string]interface{}
@@ -92,7 +119,7 @@ func (jm JSONMap) GormValue(ctx context.Context, db *gorm.DB) clause.Expr {
 	data, _ := jm.MarshalJSON()
 	switch db.Dialector.Name() {
 	case "mysql":
-		if v, ok := db.Dialector.(*mysql.Dialector); ok && !strings.Contains(v.ServerVersion, "MariaDB") {
+		if v, ok := db.Dialector.(*mySQLDialector); ok && !strings.Contains(v.ServerVersion, "MariaDB") {
 			return gorm.Expr("CAST(? AS JSON)", string(data))
 		}
 	}

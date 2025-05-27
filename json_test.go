@@ -3,11 +3,9 @@ package datatypes_test
 import (
 	"database/sql/driver"
 	"encoding/json"
-	"strings"
 	"testing"
 
 	"gorm.io/datatypes"
-	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	. "gorm.io/gorm/utils/tests"
 )
@@ -332,11 +330,11 @@ func TestJSONSet(t *testing.T) {
 		}
 
 		var isMariaDB bool
-		if DB.Dialector.Name() == "mysql" {
-			if v, ok := DB.Dialector.(*mysql.Dialector); ok {
-				isMariaDB = strings.Contains(v.ServerVersion, "MariaDB")
-			}
-		}
+		// if DB.Dialector.Name() == "mysql" {
+		// 	if v, ok := DB.Dialector.(*mySQLDialector); ok {
+		// 		isMariaDB = strings.Contains(v.ServerVersion, "MariaDB")
+		// 	}
+		// }
 		users := []UserWithJSON{{
 			Name:       "json-1",
 			Attributes: datatypes.JSON([]byte(`{"name": "json-1", "age": 18, "orgs": {"orga": "orga"}, "tags": ["tag1", "tag2"], "admin": true}`)),
