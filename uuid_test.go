@@ -4,8 +4,8 @@ import (
 	"database/sql/driver"
 	"testing"
 
+	"github.com/LNAhri/datatypes"
 	"github.com/google/uuid"
-	"gorm.io/datatypes"
 	"gorm.io/gorm"
 	. "gorm.io/gorm/utils/tests"
 )

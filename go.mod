@@ -1,6 +1,6 @@
-module gorm.io/datatypes
+module github.com/LNAhri/datatypes
 
-go 1.23
+go 1.23.0
 
 require (
 	github.com/google/uuid v1.6.0
@@ -11,6 +11,6 @@ require (
 
 require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
-	github.com/mattn/go-sqlite3 v1.14.22 // indirect
-	golang.org/x/text v0.21.0 // indirect
+	github.com/mattn/go-sqlite3 v1.14.28 // indirect
+	golang.org/x/text v0.25.0 // indirect
 )
